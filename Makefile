@@ -1,15 +1,25 @@
 test:
+	@echo "Formatting Terraform..."
 	terraform fmt -recursive
-	terraform validate
+
+	@echo "Initializing Terraform..."
+	terraform -chdir=envs/dev init -backend=false
+
+	@echo "Validating Terraform..."
+	terraform -chdir=envs/dev validate
+
+	@echo "Running TFLint..."
 	tflint --init
 	tflint
 
-	@echo "Running Checkov (do not stop immediately)..."
+	@echo "Creating evidence folder..."
 	-mkdir -p evidence
+
+	@echo "Running Checkov..."
 	-checkov -d envs/dev > evidence/checkov.txt || true
 
-	@echo "Generating Terraform plan..."
-	terraform -chdir=envs/dev plan > ../evidence/plan.txt || true
+	@echo "Generating Terraform Plan..."
+	terraform -chdir=envs/dev plan -no-color > evidence/plan.txt || true
 
-	@echo "Evidence saved in evidence/"
+	@echo "Done. Evidence saved in evidence/"
 

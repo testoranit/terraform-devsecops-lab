@@ -1,0 +1,57 @@
+
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.2.499 
+Update available 3.2.499 -> 3.2.502
+Run pip3 install -U checkov to update 
+
+
+terraform scan results:
+
+Passed checks: 2, Failed checks: 2, Skipped checks: 1
+
+Check: CKV_AWS_130: "Ensure VPC subnets do not assign public IP by default"
+	PASSED for resource: aws_subnet.private_subnet
+	File: \main.tf:22-29
+	Guide: [1mhttps://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-vpc-subnets-do-not-assign-public-ip-by-default
+[0mCheck: CKV_AWS_41: "Ensure no hard coded AWS access key and secret key exists in provider"
+	PASSED for resource: aws.default
+	File: \provider.tf:12-14
+	Guide: [1mhttps://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/secrets-policies/bc-aws-secrets-5
+[0mCheck: CKV2_AWS_11: "Ensure VPC flow logging is enabled in all VPCs"
+	FAILED for resource: aws_vpc.dev_vpc
+	File: \main.tf:1-7
+	Guide: [1mhttps://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/logging-9-enable-vpc-flow-logging
+[0m
+		[37m1 | [33mresource "aws_vpc" "dev_vpc" {
+		[37m2 | [33m  cidr_block = "10.10.0.0/16"
+		[37m3 | [33m
+		[37m4 | [33m  tags = {
+		[37m5 | [33m    Name = "devsecops-dev-vpc"
+		[37m6 | [33m  }
+		[37m7 | [33m}
+
+Check: CKV2_AWS_12: "Ensure the default security group of every VPC restricts all traffic"
+	FAILED for resource: aws_vpc.dev_vpc
+	File: \main.tf:1-7
+	Guide: [1mhttps://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-4
+[0m
+		[37m1 | [33mresource "aws_vpc" "dev_vpc" {
+		[37m2 | [33m  cidr_block = "10.10.0.0/16"
+		[37m3 | [33m
+		[37m4 | [33m  tags = {
+		[37m5 | [33m    Name = "devsecops-dev-vpc"
+		[37m6 | [33m  }
+		[37m7 | [33m}
+
+Check: CKV_AWS_130: "Ensure VPC subnets do not assign public IP by default"
+	SKIPPED for resource: aws_subnet.public_subnet
+	Suppress comment:  "Public subnet requires public IP assignment"
+	File: \main.tf:9-20
+	Guide: [1mhttps://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-vpc-subnets-do-not-assign-public-ip-by-default
+[0m
