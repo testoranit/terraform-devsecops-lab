@@ -1,0 +1,33 @@
+name: Terraform PR Security Checks
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  pr-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: envs/dev
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: envs/dev
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: envs/dev
+
